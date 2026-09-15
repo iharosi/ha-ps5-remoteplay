@@ -13,7 +13,7 @@
     "ps5_remoteplay"
   ],
   "requirements": [
-    "ps5-remoteplay==0.1.2"
+    "ps5-remoteplay==0.1.3"
   ],
-  "version": "0.1.2"
+  "version": "0.1.3"
 }
