@@ -1,0 +1,13 @@
+{
+  "domain": "ps5_remoteplay",
+  "name": "PS5 Remote Play",
+  "codeowners": ["@iharosi"],
+  "config_flow": true,
+  "documentation": "https://github.com/iharosi/ha-ps5-remoteplay",
+  "integration_type": "device",
+  "iot_class": "local_polling",
+  "issue_tracker": "https://github.com/iharosi/ha-ps5-remoteplay/issues",
+  "loggers": ["ps5_remoteplay"],
+  "requirements": ["ps5-remoteplay==0.1.0"],
+  "version": "0.1.0"
+}

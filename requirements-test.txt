@@ -1,0 +1,2 @@
+pytest-homeassistant-custom-component
+ps5-remoteplay==0.1.0

@@ -1,0 +1,58 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Connect your PS5",
+        "description": "Turn the PS5 on (fully awake, not in rest mode) and enter its IP address. Give it a fixed IP in your router so Home Assistant can always find it.",
+        "data": {
+          "host": "IP address"
+        }
+      },
+      "auth": {
+        "title": "Sign in to PlayStation Network",
+        "description": "1. [Open the PSN sign-in page]({login_url}) and sign in with the account you use on the PS5.\n2. After signing in, the page shows the word \"redirect\".\n3. Copy the full address from the browser's address bar and paste it below. It starts with `https://remoteplay.dl.playstation.net/remoteplay/redirect?code=`.\n\nThe code expires after a few minutes.",
+        "data": {
+          "redirect_url": "Redirect address"
+        }
+      },
+      "link": {
+        "title": "Link Home Assistant to the PS5",
+        "description": "On the PS5, open **Settings > System > Remote Play > Link Device**. Keep that screen open, then enter the PIN it shows.",
+        "data": {
+          "pin": "PIN"
+        }
+      },
+      "reauth_confirm": {
+        "title": "Pair {name} again",
+        "description": "The PS5 no longer accepts Home Assistant's pairing. Turn the PS5 on, then continue to sign in and link it again."
+      }
+    },
+    "error": {
+      "cannot_connect": "No PS5 answered at this address. Check the IP address and that the PS5 is connected to the network.",
+      "not_awake": "The PS5 is in rest mode. Turn it on fully, then try again.",
+      "invalid_redirect": "That address was not accepted. Sign in again and paste the full redirect address right away.",
+      "psn_unreachable": "Could not reach PlayStation Network. Try again in a moment.",
+      "invalid_pin": "The PS5 rejected the PIN. Check the PIN on the Link Device screen, which changes each time it opens.",
+      "link_not_open": "The PS5 did not respond. Open Settings > System > Remote Play > Link Device on the PS5 and try again.",
+      "registration_failed": "The PS5 refused the pairing. Close and reopen the Link Device screen, then try again."
+    },
+    "abort": {
+      "already_configured": "This PS5 is already set up.",
+      "reauth_successful": "The PS5 is paired again."
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "PS5 options",
+        "description": "If the PS5 user you signed in with has a passcode, enter it here. It is only needed to put the PS5 into standby.",
+        "data": {
+          "passcode": "4-digit passcode"
+        }
+      }
+    },
+    "error": {
+      "invalid_passcode": "The passcode must be exactly 4 digits."
+    }
+  }
+}
