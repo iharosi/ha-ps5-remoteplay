@@ -25,6 +25,9 @@ from .coordinator import PS5ConfigEntry, PS5Coordinator
 
 PARALLEL_UPDATES = 1
 
+# Other refusals, like 80108b10 (already in use), don't mean the pairing is invalid
+_REASON_INVALID_ACCOUNT = "80108b02"
+
 
 async def async_setup_entry(
     hass: HomeAssistant,
@@ -106,7 +109,7 @@ class PS5PowerSwitch(CoordinatorEntity[PS5Coordinator], SwitchEntity):
                 "The PS5 rejected the passcode set in the integration's options"
             ) from err
         except RemotePlayHttpError as err:
-            if err.status in (401, 403):
+            if (err.reason_code or "").lower() == _REASON_INVALID_ACCOUNT:
                 entry.async_start_reauth(self.hass)
             raise HomeAssistantError(f"Could not put the PS5 into standby: {err}") from err
         except (PS5Error, OSError) as err:

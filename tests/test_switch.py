@@ -95,7 +95,13 @@ async def test_turn_off_errors(hass: HomeAssistant, stop_patches) -> None:
             await hass.services.async_call("switch", "turn_off", {ATTR_ENTITY_ID: ENTITY_ID}, blocking=True)
     assert hass.states.get(ENTITY_ID).state == STATE_ON
 
-    with patch(f"{SWITCH}.standby", AsyncMock(side_effect=RemotePlayHttpError(403))):
+    with patch(f"{SWITCH}.standby", AsyncMock(side_effect=RemotePlayHttpError(403, "80108b10"))):
+        with pytest.raises(HomeAssistantError, match="already in use"):
+            await hass.services.async_call("switch", "turn_off", {ATTR_ENTITY_ID: ENTITY_ID}, blocking=True)
+    await hass.async_block_till_done()
+    assert hass.config_entries.flow.async_progress_by_handler(DOMAIN) == []
+
+    with patch(f"{SWITCH}.standby", AsyncMock(side_effect=RemotePlayHttpError(403, "80108B02"))):
         with pytest.raises(HomeAssistantError):
             await hass.services.async_call("switch", "turn_off", {ATTR_ENTITY_ID: ENTITY_ID}, blocking=True)
     await hass.async_block_till_done()
