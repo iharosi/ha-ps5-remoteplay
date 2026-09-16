@@ -51,8 +51,9 @@ async def test_state_follows_console(hass: HomeAssistant, stop_patches, freezer)
     assert entry.state is ConfigEntryState.LOADED
     assert hass.states.get(ENTITY_ID).state == STATE_OFF
 
+    # switched on with the controller: picked up by the next poll, a few seconds later
     get_device.return_value = make_device(DeviceStatus.AWAKE)
-    await _tick(hass, freezer, 11)
+    await _tick(hass, freezer, 4)
     assert hass.states.get(ENTITY_ID).state == STATE_ON
 
 
