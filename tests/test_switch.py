@@ -61,10 +61,10 @@ async def test_brief_silence_keeps_state(hass: HomeAssistant, stop_patches, free
     _, get_device, patcher = await _setup(hass, DeviceStatus.AWAKE)
     stop_patches.append(patcher)
 
-    # the console goes quiet while it changes power state
+    # the console goes quiet for up to ~20 s while it changes power state
     get_device.side_effect = DeviceNotFound("quiet")
-    for _ in range(4):
-        await _tick(hass, freezer, 11)
+    for _ in range(2):
+        await _tick(hass, freezer, 10)
         assert hass.states.get(ENTITY_ID).state == STATE_ON
 
     get_device.side_effect = None
@@ -77,12 +77,13 @@ async def test_long_silence_becomes_unavailable(hass: HomeAssistant, stop_patche
     _, get_device, patcher = await _setup(hass, DeviceStatus.AWAKE)
     stop_patches.append(patcher)
 
-    get_device.side_effect = DeviceNotFound("unplugged")
-    for _ in range(5):
-        await _tick(hass, freezer, 11)
+    # fully powered off: never answers again
+    get_device.side_effect = DeviceNotFound("powered off")
+    for _ in range(2):
+        await _tick(hass, freezer, 10)
     assert hass.states.get(ENTITY_ID).state == STATE_ON
 
-    await _tick(hass, freezer, 11)
+    await _tick(hass, freezer, 15)
     assert hass.states.get(ENTITY_ID).state == STATE_UNAVAILABLE
 
 
