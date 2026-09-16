@@ -1,5 +1,6 @@
 import logging
-from importlib.metadata import PackageNotFoundError, version
+
+import ps5_remoteplay
 
 from homeassistant.const import Platform
 from homeassistant.core import HomeAssistant
@@ -12,10 +13,11 @@ PLATFORMS = [Platform.SWITCH]
 
 
 async def async_setup_entry(hass: HomeAssistant, entry: PS5ConfigEntry) -> bool:
-    try:
-        _LOGGER.debug("Using ps5-remoteplay %s", version("ps5-remoteplay"))
-    except PackageNotFoundError:
-        _LOGGER.debug("ps5-remoteplay version is unknown")
+    _LOGGER.debug(
+        "Using ps5-remoteplay %s from %s",
+        getattr(ps5_remoteplay, "__version__", "unknown"),
+        ps5_remoteplay.__file__,
+    )
     coordinator = PS5Coordinator(hass, entry)
     await coordinator.async_config_entry_first_refresh()
     entry.runtime_data = coordinator
