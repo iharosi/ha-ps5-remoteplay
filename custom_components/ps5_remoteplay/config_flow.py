@@ -13,6 +13,7 @@ from ps5_remoteplay import (
     login_url,
     register,
 )
+from ps5_remoteplay.const import OAUTH_REDIRECT_URI
 
 from homeassistant.config_entries import (
     SOURCE_REAUTH,
@@ -99,7 +100,10 @@ class PS5ConfigFlow(ConfigFlow, domain=DOMAIN):
         return self.async_show_form(
             step_id="auth",
             data_schema=vol.Schema({vol.Required(CONF_REDIRECT_URL): str}),
-            description_placeholders={"login_url": login_url()},
+            description_placeholders={
+                "login_url": login_url(),
+                "redirect_prefix": f"{OAUTH_REDIRECT_URI}?code=",
+            },
             errors=errors,
         )
 

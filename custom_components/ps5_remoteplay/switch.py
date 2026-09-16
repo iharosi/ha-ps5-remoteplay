@@ -41,6 +41,7 @@ class PS5PowerSwitch(CoordinatorEntity[PS5Coordinator], SwitchEntity):
     _attr_has_entity_name = True
     _attr_name = None
     _attr_device_class = SwitchDeviceClass.SWITCH
+    _attr_icon = "mdi:sony-playstation"
 
     def __init__(self, coordinator: PS5Coordinator) -> None:
         super().__init__(coordinator)

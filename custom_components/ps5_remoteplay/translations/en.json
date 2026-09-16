@@ -10,7 +10,7 @@
       },
       "auth": {
         "title": "Sign in to PlayStation Network",
-        "description": "1. [Open the PSN sign-in page]({login_url}) and sign in with the account you use on the PS5.\n2. After signing in, the page shows the word \"redirect\".\n3. Copy the full address from the browser's address bar and paste it below. It starts with `https://remoteplay.dl.playstation.net/remoteplay/redirect?code=`.\n\nThe code expires after a few minutes.",
+        "description": "1. [Open the PSN sign-in page]({login_url}) and sign in with the account you use on the PS5.\n2. After signing in, the page shows the word \"redirect\".\n3. Copy the full address from the browser's address bar and paste it below. It starts with `{redirect_prefix}`.\n\nThe code expires after a few minutes.",
         "data": {
           "redirect_url": "Redirect address"
         }

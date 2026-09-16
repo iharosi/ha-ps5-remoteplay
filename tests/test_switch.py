@@ -50,6 +50,7 @@ async def test_state_follows_console(hass: HomeAssistant, stop_patches, freezer)
     stop_patches.append(patcher)
     assert entry.state is ConfigEntryState.LOADED
     assert hass.states.get(ENTITY_ID).state == STATE_OFF
+    assert hass.states.get(ENTITY_ID).attributes["icon"] == "mdi:sony-playstation"
 
     # switched on with the controller: picked up by the next poll, a few seconds later
     get_device.return_value = make_device(DeviceStatus.AWAKE)

@@ -42,6 +42,9 @@ async def test_full_flow(hass: HomeAssistant) -> None:
         result = await hass.config_entries.flow.async_configure(result["flow_id"], {CONF_HOST: f" {HOST} "})
         assert result["step_id"] == "auth"
         assert "oauth/authorize" in result["description_placeholders"]["login_url"]
+        assert result["description_placeholders"]["redirect_prefix"] == (
+            "https://remoteplay.dl.playstation.net/remoteplay/redirect?code="
+        )
 
         result = await hass.config_entries.flow.async_configure(result["flow_id"], {"redirect_url": REDIRECT})
         assert result["step_id"] == "link"
