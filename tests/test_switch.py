@@ -39,20 +39,49 @@ def stop_patches():
         p.stop()
 
 
-async def test_state_follows_console(hass: HomeAssistant, stop_patches) -> None:
+async def _tick(hass: HomeAssistant, freezer, seconds: int) -> None:
+    freezer.tick(timedelta(seconds=seconds))
+    async_fire_time_changed(hass)
+    await hass.async_block_till_done()
+
+
+async def test_state_follows_console(hass: HomeAssistant, stop_patches, freezer) -> None:
     entry, get_device, patcher = await _setup(hass, DeviceStatus.STANDBY)
     stop_patches.append(patcher)
     assert entry.state is ConfigEntryState.LOADED
     assert hass.states.get(ENTITY_ID).state == STATE_OFF
 
     get_device.return_value = make_device(DeviceStatus.AWAKE)
-    async_fire_time_changed(hass, dt_util.utcnow() + timedelta(seconds=11))
-    await hass.async_block_till_done()
+    await _tick(hass, freezer, 11)
     assert hass.states.get(ENTITY_ID).state == STATE_ON
 
-    get_device.side_effect = DeviceNotFound("gone")
-    async_fire_time_changed(hass, dt_util.utcnow() + timedelta(seconds=22))
-    await hass.async_block_till_done()
+
+async def test_brief_silence_keeps_state(hass: HomeAssistant, stop_patches, freezer) -> None:
+    _, get_device, patcher = await _setup(hass, DeviceStatus.AWAKE)
+    stop_patches.append(patcher)
+
+    # the console goes quiet while it changes power state
+    get_device.side_effect = DeviceNotFound("quiet")
+    for _ in range(4):
+        await _tick(hass, freezer, 11)
+        assert hass.states.get(ENTITY_ID).state == STATE_ON
+
+    get_device.side_effect = None
+    get_device.return_value = make_device(DeviceStatus.STANDBY)
+    await _tick(hass, freezer, 11)
+    assert hass.states.get(ENTITY_ID).state == STATE_OFF
+
+
+async def test_long_silence_becomes_unavailable(hass: HomeAssistant, stop_patches, freezer) -> None:
+    _, get_device, patcher = await _setup(hass, DeviceStatus.AWAKE)
+    stop_patches.append(patcher)
+
+    get_device.side_effect = DeviceNotFound("unplugged")
+    for _ in range(5):
+        await _tick(hass, freezer, 11)
+    assert hass.states.get(ENTITY_ID).state == STATE_ON
+
+    await _tick(hass, freezer, 11)
     assert hass.states.get(ENTITY_ID).state == STATE_UNAVAILABLE
 
 
