@@ -4,3 +4,4 @@ __pycache__/
 *credentials*.json
 *.log
 *.pcap
+CLAUDE.local.md
